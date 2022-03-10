@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "1"
+description = "'project 2'"
+authors = ["Polina Ikonnikova <spollyv@gmail.com>"]
+packages = [
+  { include = "gendiff" },
+]
+repository = "https://github.com/PolinaIkonnikova/python-project-lvl2.git"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^6"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+pytest = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+gendiff = "gendiff.scripts.gendiff:main"
