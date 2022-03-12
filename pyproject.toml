@@ -12,6 +12,7 @@ repository = "https://github.com/PolinaIkonnikova/python-project-lvl2.git"
 python = "^3.8"
 PyYAML = "^6"
 coverage = "^6.3.2"
+pytest-cov = "^3.0.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
