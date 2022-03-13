@@ -7,6 +7,9 @@ def json_format(node_list):
     def make_json(node):
         if node['status'] == 'internal_change':
             return {node['name']: list(map(make_json, node['value']))}
+        if node['status'] == 'changed_value':
+            return {node['name']: (('deleted', node['value'][0]),
+                                ('added', node['value'][1]))}
         return {node['name']: (node['status'], node['value'])}
 
     output = list(map(make_json, node_list))

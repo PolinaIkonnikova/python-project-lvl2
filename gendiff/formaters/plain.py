@@ -3,7 +3,6 @@ import itertools
 
 def flatten(node_list):
     result = []
-
     def walk(lst):
         for item in lst:
             if isinstance(item, list):
@@ -15,17 +14,16 @@ def flatten(node_list):
 
 
 def get_value(val):
-    bool_list = {'true', 'false', 'null'}
+    json_format_set = {'true', 'false', 'null'}
     if isinstance(val, dict):
         return '[complex value]'
-    if val in bool_list:
+    if val in json_format_set:
         return val
     return "'{}'".format(val)
 
 
 def plain(node_list):
     path = []
-
     def make_lines(node_list, path):
         result = []
         node_list = sorted(node_list, key=lambda x: x['name'])
