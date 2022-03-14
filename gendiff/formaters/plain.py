@@ -1,16 +1,5 @@
 import itertools
-
-
-def flatten(node_list):
-    result = []
-    def walk(lst):
-        for item in lst:
-            if isinstance(item, list):
-                walk(item)
-            else:
-                result.append(item)
-    walk(node_list)
-    return result
+from gendiff.misc.flatten import flatten
 
 
 def get_value(val):
@@ -24,9 +13,12 @@ def get_value(val):
 
 def plain(node_list):
     path = []
+
     def make_lines(node_list, path):
+
         result = []
         node_list = sorted(node_list, key=lambda x: x['name'])
+
         for node in list(filter(lambda x: x['status'] != "unchanged",
                                 node_list)):
             path_record = list(itertools.chain(path, [str(node['name'])]))
@@ -44,7 +36,11 @@ def plain(node_list):
                 line = "Property '{}' was updated. From {} to {}".format(
                     '.'.join(path_record), get_value(node['value'][0]),
                     get_value(node['value'][1]))
+
             result.append(line)
+
         return result
+
     output = make_lines(node_list, path)
+
     return '\n'.join(flatten(output))
