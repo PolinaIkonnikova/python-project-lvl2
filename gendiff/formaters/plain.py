@@ -8,6 +8,8 @@ def get_value(val):
         return '[complex value]'
     if val in json_format_set:
         return val
+    if val.isdigit():
+        return val
     return "'{}'".format(val)
 
 
