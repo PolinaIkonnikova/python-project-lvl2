@@ -7,9 +7,10 @@ from .formaters.json_format import json_format
 
 
 def get_value(val):
-    js_values = {True: 'true', False: 'false', None: 'null'}
+    js_values = {'True': 'true', 'False': 'false', 'None': 'null'}
     if isinstance(val, dict):
         return {k: get_value(v) for k, v in val.items()}
+    val = str(val)
     if val in js_values:
         return js_values[val]
     return val
