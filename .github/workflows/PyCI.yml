@@ -1,11 +1,11 @@
-name: Lint
+name:  Python CI
 
 on:
   - push
 
 jobs:
   run-linters:
-    name: Run linter
+    name: Run linter and pytest
     runs-on: ubuntu-latest
 
     steps:
@@ -18,3 +18,6 @@ jobs:
       - name: Run linter
         run: |
            make lint
+      - name: Run pytest
+        run: |
+           make test
