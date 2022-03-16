@@ -43,14 +43,13 @@ def is_json(json_data):
 
 def test_gendiff_json():
     result1 = generate_diff('tests/fixtures/tree1.json',
-                                'tests/fixtures/tree2.json',
-                                'json')
+                            'tests/fixtures/tree2.json',
+                            'json')
     result2 = generate_diff('tests/fixtures/flat1.yaml',
-                                'tests/fixtures/flat2.yaml',
-                                'json')
+                            'tests/fixtures/flat2.yaml',
+                            'json')
     result3 = generate_diff('tests/fixtures/tree1.yaml',
-                                'tests/fixtures/tree2.yaml')
-    assert is_json(result1) == True
-    assert is_json(result2) == True
-    assert is_json(result3) == False
-
+                            'tests/fixtures/tree2.yaml')
+    assert is_json(result1) is True
+    assert is_json(result2) is True
+    assert is_json(result3) is False
