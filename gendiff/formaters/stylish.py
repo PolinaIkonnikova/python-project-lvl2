@@ -2,6 +2,7 @@ import itertools
 
 
 REPLACER = ' '
+STEP = 2
 
 
 def output(lines, space):
@@ -9,52 +10,50 @@ def output(lines, space):
                    '{\n', lines, space * REPLACER + '}'))
 
 
+def get_value(val, space):
+    if isinstance(val, dict):
+        result_with_dict = []
+        for k, v in val.items():
+            line = '{}: {}\n'.format(k, get_value(v, space + 2 * STEP))
+            result_with_dict.append((space + 2 * STEP) * REPLACER + line)
+        return output(sorted(result_with_dict), space)
+    return val
+
+
 def stylish(node_list):
     signs_dict = {'deleted': '-', 'added': '+', 'unchanged': ' '}
-    step = 2
-    node_list = sorted(node_list, key=lambda node: node['name'])
 
-    def get_value(val, space):
-        if isinstance(val, dict):
-            result_with_dict = []
-            for k, v in val.items():
-                line = '{}: {}\n'.format(k, get_value(v, space + 2 * step))
-                result_with_dict.append((space + 2 * step) * REPLACER + line)
-            return output(sorted(result_with_dict), space)
-        return val
+    def make_lines(node, space):
+        output_line = (space + STEP) * REPLACER + '{} {}: {}\n'
 
-    def make_lines(node_list, space):
+        if node['status'] == 'internal_change':
+            val = make_stylish(node['children'], space + 2 * STEP)
+            new_line = output_line.format(signs_dict['unchanged'],
+                                          node['name'], val)
+            return new_line
 
-        output_line = (space + step) * REPLACER + '{} {}: {}\n'
+        elif node['status'] == 'changed_value':
+            val_del = node['value'][0]
+            val_add = node['value'][1]
+            first_line = output_line.format(signs_dict['deleted'],
+                                            node['name'],
+                                            get_value(val_del,
+                                            space + 2 * STEP))
+            second_line = output_line.format(signs_dict['added'],
+                                             node['name'],
+                                             get_value(val_add,
+                                             space + 2 * STEP))
+            return first_line + second_line
 
+        new_line = output_line.format(signs_dict[node['status']],
+                                      node['name'],
+                                      get_value(node['value'],
+                                      space + 2 * STEP))
+        return new_line
+
+    def make_stylish(node_list, space):
         node_list = sorted(node_list, key=lambda node: node['name'])
-
-        result = []
-
-        for node in node_list:
-            if node['status'] == 'internal_change':
-                val = make_lines(node['value'], space + 2 * step)
-                new_line = output_line.format(signs_dict['unchanged'],
-                                              node['name'], val)
-            elif node['status'] == 'changed_value':
-                val_del = node['value'][0]
-                val_add = node['value'][1]
-                first_line = output_line.format(signs_dict['deleted'],
-                                                node['name'],
-                                                get_value(val_del,
-                                                space + 2 * step))
-                second_line = output_line.format(signs_dict['added'],
-                                                 node['name'],
-                                                 get_value(val_add,
-                                                 space + 2 * step))
-                new_line = first_line + second_line
-            else:
-                new_line = output_line.format(signs_dict[node['status']],
-                                              node['name'],
-                                              get_value(node['value'],
-                                              space + 2 * step))
-            result.append(new_line)
-
+        result = list(map(lambda node: make_lines(node, space), node_list))
         return output(result, space)
 
-    return make_lines(node_list, 0)
+    return make_stylish(node_list, 0)

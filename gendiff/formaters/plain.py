@@ -16,33 +16,30 @@ def get_value(val):
 def plain(node_list):
     path = []
 
-    def make_lines(node_list, path):
+    def make_plain(node_list, path):
+        node_list = list(filter(lambda x: x['status'] != "unchanged",
+                         sorted(node_list, key=lambda x: x['name'])))
+        return list(map(lambda node: make_lines(node, path), node_list))
 
-        result = []
-        node_list = sorted(node_list, key=lambda x: x['name'])
+    def make_lines(node, path):
 
-        for node in list(filter(lambda x: x['status'] != "unchanged",
-                                node_list)):
-            path_record = list(itertools.chain(path, [str(node['name'])]))
-            if node['status'] == 'internal_change':
-                line = make_lines(node['value'], path_record)
+        path_record = list(itertools.chain(path, [str(node['name'])]))
 
-            elif node['status'] == 'added':
-                line = "Property '{}' was added with value: {}".format(
-                    '.'.join(path_record), get_value(node['value']))
+        if node['status'] == 'internal_change':
+            return make_plain(node['children'], path_record)
 
-            elif node['status'] == 'deleted':
-                line = "Property '{}' was removed".format('.'.join(path_record))
+        elif node['status'] == 'added':
+            return "Property '{}' was added with value: {}".format(
+                '.'.join(path_record), get_value(node['value']))
 
-            elif node['status'] == 'changed_value':
-                line = "Property '{}' was updated. From {} to {}".format(
-                    '.'.join(path_record), get_value(node['value'][0]),
-                    get_value(node['value'][1]))
+        elif node['status'] == 'deleted':
+            return "Property '{}' was removed".format('.'.join(path_record))
 
-            result.append(line)
+        elif node['status'] == 'changed_value':
+            return "Property '{}' was updated. From {} to {}".format(
+                '.'.join(path_record), get_value(node['value'][0]),
+                get_value(node['value'][1]))
 
-        return result
-
-    output = make_lines(node_list, path)
+    output = make_plain(node_list, path)
 
     return '\n'.join(flatten(output))
