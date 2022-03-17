@@ -6,3 +6,15 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/b1adf05fa6f55999f3a3/maintainability)](https://codeclimate.com/github/PolinaIkonnikova/python-project-lvl2/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b1adf05fa6f55999f3a3/test_coverage)](https://codeclimate.com/github/PolinaIkonnikova/python-project-lvl2/test_coverage)
+
+Reference information
+[![asciicast](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k.svg)](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k?speed=2)
+
+Stylish format
+[![asciicast](https://asciinema.org/a/0dkzlEhjTj2uxVF8RgTMWUvrV.svg)](https://asciinema.org/a/0dkzlEhjTj2uxVF8RgTMWUvrV?speed=2)
+
+Plain format
+[![asciicast](https://asciinema.org/a/xxB7LETUAEt9R6Iy34BXKL2IO.svg)](https://asciinema.org/a/xxB7LETUAEt9R6Iy34BXKL2IO?speed=2)
+
+Json format
+[![asciicast](https://asciinema.org/a/1tRu9zjxOKLZOop0u9sq5vrP7.svg)](https://asciinema.org/a/1tRu9zjxOKLZOop0u9sq5vrP7?speed=2)
