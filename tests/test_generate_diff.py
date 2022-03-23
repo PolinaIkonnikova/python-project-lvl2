@@ -1,5 +1,5 @@
 import json
-from gendiff import generate_diff
+from gendiff.gendiff import generate_diff
 
 
 def test_flat_file():

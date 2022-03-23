@@ -10,50 +10,49 @@ def output(lines, space):
                    '{\n', lines, space * REPLACER + '}'))
 
 
-def get_value(val, space):
-    if isinstance(val, dict):
-        result_with_dict = []
-        for k, v in val.items():
-            line = '{}: {}\n'.format(k, get_value(v, space + 2 * STEP))
-            result_with_dict.append((space + 2 * STEP) * REPLACER + line)
-        return output(sorted(result_with_dict), space)
-    return val
+def sorted_dict(dct):
+    return dict(sorted(dct.items(), key=lambda x: x[0]))
 
 
-def stylish(node_list):
+def stylish(diff_dict):
     signs_dict = {'deleted': '-', 'added': '+', 'unchanged': ' '}
 
-    def make_lines(node, space):
+    def get_value(val, space):
+        if isinstance(val, dict):
+            result_with_dict = []
+            for k, v in val.items():
+                line = '{}: {}\n'.format(k, get_value(v, space + 2 * STEP))
+                result_with_dict.append((space + 2 * STEP) * REPLACER + line)
+            return output(sorted(result_with_dict), space)
+        return val
+
+    def make_lines(item, space):
         output_line = (space + STEP) * REPLACER + '{} {}: {}\n'
+        name, attributes = item
+        status = attributes['type']
 
-        if node['status'] == 'internal_change':
-            val = make_stylish(node['children'], space + 2 * STEP)
-            new_line = output_line.format(signs_dict['unchanged'],
-                                          node['name'], val)
-            return new_line
+        if status == 'internal_change':
+            children = attributes['children']
+            val = list(map(lambda item: make_lines(item, space + 2 * STEP),
+                           sorted_dict(children).items()))
+            return output_line.format(signs_dict['unchanged'],
+                                      name, output(val, space + 2 * STEP))
 
-        elif node['status'] == 'changed_value':
-            val_del = node['value'][0]
-            val_add = node['value'][1]
-            first_line = output_line.format(signs_dict['deleted'],
-                                            node['name'],
+        if status == 'changed_value':
+            val_del = attributes['value'][0]
+            val_add = attributes['value'][1]
+            first_line = output_line.format(signs_dict['deleted'], name,
                                             get_value(val_del,
                                             space + 2 * STEP))
-            second_line = output_line.format(signs_dict['added'],
-                                             node['name'],
+            second_line = output_line.format(signs_dict['added'], name,
                                              get_value(val_add,
                                              space + 2 * STEP))
             return first_line + second_line
 
-        new_line = output_line.format(signs_dict[node['status']],
-                                      node['name'],
-                                      get_value(node['value'],
-                                      space + 2 * STEP))
-        return new_line
+        val = attributes['value']
+        return output_line.format(signs_dict[status], name,
+                                  get_value(val, space + 2 * STEP))
 
-    def make_stylish(node_list, space):
-        node_list = sorted(node_list, key=lambda node: node['name'])
-        result = list(map(lambda node: make_lines(node, space), node_list))
-        return output(result, space)
-
-    return make_stylish(node_list, 0)
+    result = list(map(lambda item: make_lines(item, 0),
+                      sorted_dict(diff_dict).items()))
+    return output(result, 0)

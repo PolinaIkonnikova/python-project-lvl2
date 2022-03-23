@@ -1,5 +1,4 @@
 import itertools
-from gendiff.misc.flatten import flatten
 
 
 def get_value(val):
@@ -13,33 +12,43 @@ def get_value(val):
     return "'{}'".format(val)
 
 
+def get_dict(dct):
+    return dict(filter(lambda item: item[1]['type'] != 'unchanged',
+                       sorted(dct.items(), key=lambda x: x[0])))
+
+
 def plain(node_list):
     path = []
 
-    def make_plain(node_list, path):
-        node_list = list(filter(lambda x: x['status'] != "unchanged",
-                         sorted(node_list, key=lambda x: x['name'])))
-        return list(map(lambda node: make_lines(node, path), node_list))
+    def make_plain(item, path):
+        name, attributes = item
+        status = attributes['type']
+        path_record = list(itertools.chain(path, [str(name)]))
 
-    def make_lines(node, path):
+        if status == 'internal_change':
+            children = attributes['children']
+            return '\n'.join(list(map(
+                             lambda item: make_plain(item, path_record),
+                             get_dict(children).items())))
 
-        path_record = list(itertools.chain(path, [str(node['name'])]))
-
-        if node['status'] == 'internal_change':
-            return make_plain(node['children'], path_record)
-
-        elif node['status'] == 'added':
+        elif status == 'added':
+            val = attributes['value']
             return "Property '{}' was added with value: {}".format(
-                '.'.join(path_record), get_value(node['value']))
+                '.'.join(path_record), get_value(val))
 
-        elif node['status'] == 'deleted':
+        elif status == 'deleted':
             return "Property '{}' was removed".format('.'.join(path_record))
 
-        elif node['status'] == 'changed_value':
+        elif status == 'changed_value':
+            del_val = attributes['value'][0]
+            add_val = attributes['value'][1]
             return "Property '{}' was updated. From {} to {}".format(
-                '.'.join(path_record), get_value(node['value'][0]),
-                get_value(node['value'][1]))
+                '.'.join(path_record), get_value(del_val),
+                get_value(add_val))
+        elif status == 'unchanged':
+            return ''
 
-    output = make_plain(node_list, path)
+    output = '\n'.join(list(map(lambda item: make_plain(item, path),
+                                get_dict(node_list).items())))
 
-    return '\n'.join(flatten(output))
+    return output
