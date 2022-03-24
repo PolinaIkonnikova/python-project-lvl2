@@ -1,1 +1,4 @@
-__all__ = ['generate_diff']
+Fron gendiff import gendiff 
+
+__all__ = ['gendiff']
+
