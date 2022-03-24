@@ -1,5 +1,13 @@
 import json
-from gendiff import generate_diff
+from gendiff import generate_diff, get_value
+
+
+def test_get_value():
+    assert get_value('True') == 'true'
+    assert isinstance(get_value(56), str)
+    dct1 = {1: 2}
+    val = get_value(dct1)[1]
+    assert isinstance(val, str)
 
 
 def test_flat_file():

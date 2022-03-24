@@ -17,7 +17,7 @@ def get_dict(dct):
                        sorted(dct.items(), key=lambda x: x[0])))
 
 
-def plain(node_list):
+def plain(diff_dict):
     path = []
 
     def make_plain(item, path):
@@ -49,6 +49,6 @@ def plain(node_list):
             return ''
 
     output = '\n'.join(list(map(lambda item: make_plain(item, path),
-                                get_dict(node_list).items())))
+                                get_dict(diff_dict).items())))
 
     return output
