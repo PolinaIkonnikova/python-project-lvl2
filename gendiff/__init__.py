@@ -1,4 +1,3 @@
-Fron gendiff import gendiff 
+From gendiff import gendiff
 
-__all__ = ['gendiff']
 
