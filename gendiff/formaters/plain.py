@@ -1,15 +1,16 @@
 import itertools
 import json
 
+
 def get_value(val):
 
     if isinstance(val, dict):
         return '[complex value]'
 
     if isinstance(val, bool) or val is None:
-            return json.dumps(val)
+        return json.dumps(val)
 
-    if isinstance(val, int) or isinstance(val, float) :
+    if isinstance(val, int) or isinstance(val, float):
         return str(val)
 
     return "'{}'".format(str(val))
@@ -18,6 +19,7 @@ def get_value(val):
 def get_dict(dct):
     return dict(filter(lambda item: item[1]['type'] != 'unchanged',
                        dct.items()))
+
 
 def plain(diff_dict):
     path = []
@@ -51,4 +53,4 @@ def plain(diff_dict):
             return ''
 
     return '\n'.join(list(map(lambda item: make_plain(item, path),
-                                get_dict(diff_dict).items())))
+                              get_dict(diff_dict).items())))

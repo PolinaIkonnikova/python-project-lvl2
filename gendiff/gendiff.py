@@ -34,8 +34,7 @@ def make_diff(node1, node2):
 
             else:
                 diff_dict.update(make_shape(key, [node1[key], node2[key]],
-                                                  'changed_value'))
-
+                                            'changed_value'))
 
     return dict(sorted(diff_dict.items(), key=lambda x: x[0]))
 
