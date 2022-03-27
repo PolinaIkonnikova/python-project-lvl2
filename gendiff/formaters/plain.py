@@ -1,21 +1,23 @@
 import itertools
-
+import json
 
 def get_value(val):
-    json_format_set = {'true', 'false', 'null'}
+
     if isinstance(val, dict):
         return '[complex value]'
-    if val in json_format_set:
-        return val
-    if val.isdigit():
-        return val
-    return "'{}'".format(val)
+
+    if isinstance(val, bool) or val is None:
+            return json.dumps(val)
+
+    if isinstance(val, int) or isinstance(val, float) :
+        return str(val)
+
+    return "'{}'".format(str(val))
 
 
 def get_dict(dct):
     return dict(filter(lambda item: item[1]['type'] != 'unchanged',
-                       sorted(dct.items(), key=lambda x: x[0])))
-
+                       dct.items()))
 
 def plain(diff_dict):
     path = []
@@ -26,7 +28,7 @@ def plain(diff_dict):
         path_record = list(itertools.chain(path, [str(name)]))
 
         if status == 'internal_change':
-            children = attributes['children']
+            children = attributes['value']
             return '\n'.join(list(map(
                              lambda item: make_plain(item, path_record),
                              get_dict(children).items())))
@@ -48,7 +50,5 @@ def plain(diff_dict):
         elif status == 'unchanged':
             return ''
 
-    output = '\n'.join(list(map(lambda item: make_plain(item, path),
+    return '\n'.join(list(map(lambda item: make_plain(item, path),
                                 get_dict(diff_dict).items())))
-
-    return output

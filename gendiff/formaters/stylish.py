@@ -1,4 +1,5 @@
 import itertools
+import json
 
 
 REPLACER = ' '
@@ -10,21 +11,22 @@ def output(lines, space):
                    '{\n', lines, space * REPLACER + '}'))
 
 
-def sorted_dict(dct):
-    return dict(sorted(dct.items(), key=lambda x: x[0]))
-
-
 def stylish(diff_dict):
     signs_dict = {'deleted': '-', 'added': '+', 'unchanged': ' '}
 
     def get_value(val, space):
+
         if isinstance(val, dict):
             result_with_dict = []
             for k, v in val.items():
                 line = '{}: {}\n'.format(k, get_value(v, space + 2 * STEP))
                 result_with_dict.append((space + 2 * STEP) * REPLACER + line)
-            return output(sorted(result_with_dict), space)
-        return val
+            return output(result_with_dict, space)
+
+        if isinstance(val, bool) or val is None:
+            return json.dumps(val)
+
+        return str(val)
 
     def make_lines(item, space):
         output_line = (space + STEP) * REPLACER + '{} {}: {}\n'
@@ -32,9 +34,9 @@ def stylish(diff_dict):
         status = attributes['type']
 
         if status == 'internal_change':
-            children = attributes['children']
+            children = attributes['value']
             val = list(map(lambda item: make_lines(item, space + 2 * STEP),
-                           sorted_dict(children).items()))
+                           children.items()))
             return output_line.format(signs_dict['unchanged'],
                                       name, output(val, space + 2 * STEP))
 
@@ -54,5 +56,5 @@ def stylish(diff_dict):
                                   get_value(val, space + 2 * STEP))
 
     result = list(map(lambda item: make_lines(item, 0),
-                      sorted_dict(diff_dict).items()))
+                      diff_dict.items()))
     return output(result, 0)
