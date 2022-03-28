@@ -43,8 +43,11 @@ def generate_diff(pathfile1, pathfile2, formater='stylish'):
 
     format_dict = {'plain': plain, 'json': json_format, 'stylish': stylish}
 
-    file_data1 = pars(open(pathfile1), os.path.splitext(pathfile1)[1])
-    file_data2 = pars(open(pathfile2), os.path.splitext(pathfile2)[1])
+    ending1 = os.path.splitext(pathfile1)[1]
+    ending2 = os.path.splitext(pathfile2)[1]
+
+    file_data1 = pars(open(pathfile1), ending1)
+    file_data2 = pars(open(pathfile2), ending2)
 
     format_name = format_dict[formater]
 

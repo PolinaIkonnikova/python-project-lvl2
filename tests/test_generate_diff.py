@@ -1,36 +1,67 @@
+import pytest
 import json
 from gendiff import generate_diff
+from gendiff.parsing import pars
 
 
-def test_flat_file():
-    result1 = open('tests/fixtures/nothing_to_change.txt', 'r').read()
-    result2 = open('tests/fixtures/flatfile_stylish.txt', 'r').read()
-    assert generate_diff('tests/fixtures/flat1.json',
-                         'tests/fixtures/flat1.json') == result1
-    assert generate_diff('tests/fixtures/flat1.json',
-                         'tests/fixtures/flat2.json') == result2
-    assert generate_diff('tests/fixtures/flat1.yaml',
-                         'tests/fixtures/flat2.yaml') == result2
+@pytest.mark.parametrize('data_file', ['tests/fixtures/flat_files/flat1.json',
+                                       'tests/fixtures/flat_files/flat1.yml',
+                                       'tests/fixtures/flat_files/flat1.yaml'])
+def test_parsing(data_file):
+    dict_data = pars(open(data_file), data_file)
+    assert isinstance(dict_data, dict)
 
 
-def test_gendiff_stylish():
-    result3 = open('tests/fixtures/stylish_treefile.txt', 'r').read()
-    assert generate_diff('tests/fixtures/tree1.json',
-                         'tests/fixtures/tree2.json') == result3
-    assert generate_diff('tests/fixtures/tree1.yaml',
-                         'tests/fixtures/tree2.yaml') == result3
+def test_parsing_empty():
+    dict_data = pars(open('tests/fixtures/empty_files/empty.json'),
+                     'tests/fixtures/empty_files/empty.json')
+    assert dict_data == {}
 
 
-def test_gendiff_plain():
-    result4 = open('tests/fixtures/plain_treefile.txt', 'r').read()
-    assert generate_diff('tests/fixtures/tree1.json',
-                         'tests/fixtures/tree2.json',
-                         'plain') == result4
-    assert generate_diff('tests/fixtures/tree1.yaml',
-                         'tests/fixtures/tree2.yaml',
-                         'plain') == result4
-    assert not generate_diff('tests/fixtures/tree1.yaml',
-                             'tests/fixtures/tree2.yaml') == result4
+@pytest.mark.parametrize('data_file1, data_file2, result_file',
+                         [('tests/fixtures/flat_files/flat1.json',
+                           'tests/fixtures/flat_files/flat1.json',
+                           'tests/fixtures/results/nothing_to_change1.txt'),
+                          ('tests/fixtures/flat_files/flat1.json',
+                           'tests/fixtures/empty_files/empty.json',
+                           'tests/fixtures/results/nothing_to_change2.txt'),
+                          ('tests/fixtures/flat_files/flat1.yaml',
+                           'tests/fixtures/flat_files/flat2.yaml',
+                           'tests/fixtures/results/flatfile_stylish.txt'),
+                          ('tests/fixtures/empty_files/empty.json',
+                           'tests/fixtures/empty_files/empty.json',
+                           'tests/fixtures/results/empty_res_stylish.txt')])
+def test_flat_file(data_file1, data_file2, result_file):
+    result = open(result_file, 'r').read()
+    assert generate_diff(data_file1, data_file2) == result
+
+
+@pytest.mark.parametrize('data_file1, data_file2, result_file',
+                         [('tests/fixtures/tree_files/tree1.json',
+                           'tests/fixtures/tree_files/tree2.json',
+                           'tests/fixtures/results/stylish_treefile.txt'),
+                          ('tests/fixtures/tree_files/tree1.yaml',
+                           'tests/fixtures/tree_files/tree2.yaml',
+                           'tests/fixtures/results/stylish_treefile.txt')])
+def test_gendiff_stylish(data_file1, data_file2, result_file):
+    result = open(result_file, 'r').read()
+    assert generate_diff(data_file1, data_file2) == result
+
+
+@pytest.mark.parametrize('data_file1, data_file2, result_file',
+                         [('tests/fixtures/tree_files/tree1.json',
+                           'tests/fixtures/tree_files/tree2.json',
+                           'tests/fixtures/results/plain_treefile.txt'),
+                          ('tests/fixtures/tree_files/tree1.json',
+                           'tests/fixtures/tree_files/tree1.json',
+                           'tests/fixtures/results/empty_res_plain.txt'),
+                          ('tests/fixtures/empty_files/empty.json',
+                           'tests/fixtures/empty_files/empty.json',
+                           'tests/fixtures/results/empty_res_plain.txt')])
+def test_gendiff_plain(data_file1, data_file2, result_file):
+    result = open(result_file, 'r').read()
+    assert generate_diff(data_file1, data_file2, 'plain') == result
+    assert not generate_diff(data_file1, data_file2) == result
 
 
 def is_json(json_data):
@@ -41,15 +72,13 @@ def is_json(json_data):
     return True
 
 
-def test_gendiff_json():
-    result1 = generate_diff('tests/fixtures/tree1.json',
-                            'tests/fixtures/tree2.json',
-                            'json')
-    result2 = generate_diff('tests/fixtures/flat1.yaml',
-                            'tests/fixtures/flat2.yaml',
-                            'json')
-    result3 = generate_diff('tests/fixtures/tree1.yaml',
-                            'tests/fixtures/tree2.yaml')
+@pytest.mark.parametrize('data_file1, data_file2',
+                         [('tests/fixtures/tree_files/tree1.yaml',
+                           'tests/fixtures/tree_files/tree2.json'),
+                          ('tests/fixtures/tree_files/tree1.json',
+                           'tests/fixtures/tree_files/tree1.json')])
+def test_gendiff_json(data_file1, data_file2):
+    result1 = generate_diff(data_file1, data_file2, 'json')
+    result2 = generate_diff(data_file1, data_file2)
     assert is_json(result1) is True
-    assert is_json(result2) is True
-    assert is_json(result3) is False
+    assert is_json(result2) is False
