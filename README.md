@@ -7,6 +7,8 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b1adf05fa6f55999f3a3/test_coverage)](https://codeclimate.com/github/PolinaIkonnikova/python-project-lvl2/test_coverage)
 
+Do you want to see difference between two json or yaml files? Just pull this repo to your local space.
+
 Reference information
 [![asciicast](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k.svg)](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k?speed=2)
 
