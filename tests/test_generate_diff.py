@@ -14,7 +14,7 @@ def test_parsing(data_file):
 
 def test_parsing_empty():
     dict_data = parsing_data(open('tests/fixtures/empty_files/empty.json'),
-                     'tests/fixtures/empty_files/empty.json')
+                                  'tests/fixtures/empty_files/empty.json')
     assert dict_data == {}
 
 
