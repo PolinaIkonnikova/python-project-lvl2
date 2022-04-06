@@ -11,7 +11,7 @@ def output(lines, space):
                    '{\n', lines, space * REPLACER + '}'))
 
 
-def stylish(diff_dict):
+def make_format(diff_dict):
     signs_dict = {'deleted': '-', 'added': '+', 'unchanged': ' '}
 
     def get_value(val, space):

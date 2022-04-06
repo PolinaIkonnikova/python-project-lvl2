@@ -1,19 +1,19 @@
 import pytest
 import json
 from gendiff import generate_diff
-from gendiff.parsing import pars
+from gendiff.parsing import parsing_data
 
 
 @pytest.mark.parametrize('data_file', ['tests/fixtures/flat_files/flat1.json',
                                        'tests/fixtures/flat_files/flat1.yml',
                                        'tests/fixtures/flat_files/flat1.yaml'])
 def test_parsing(data_file):
-    dict_data = pars(open(data_file), data_file)
+    dict_data = parsing_data(open(data_file), data_file)
     assert isinstance(dict_data, dict)
 
 
 def test_parsing_empty():
-    dict_data = pars(open('tests/fixtures/empty_files/empty.json'),
+    dict_data = parsing_data(open('tests/fixtures/empty_files/empty.json'),
                      'tests/fixtures/empty_files/empty.json')
     assert dict_data == {}
 

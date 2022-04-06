@@ -1,56 +1,47 @@
 import os.path
-from .parsing import pars
-from .formaters.stylish import stylish
-from .formaters.plain import plain
-from .formaters.json_format import json_format
-
-
-def make_shape(key, val, type_name):
-    return {key: {'type': type_name, 'value': val}}
+from .parsing import parsing_data
+from .formaters.all_formaters import format_change
 
 
 def make_diff(node1, node2):
 
-    diff_dict = {}
+    def get_difference(key):
 
+        if key in deleted_keys:
+            return key, {'type': 'deleted', 'value': node1[key]}
+
+        elif key in added_keys:
+            return key, {'type': 'added', 'value': node2[key]}
+
+        elif key in changed_keys and node1[key] == node2[key]:
+            return key, {'type': 'unchanged', 'value': node1[key]}
+
+        elif key in changed_keys and node1[key] != node2[key]:
+            if isinstance(node1[key], dict) and isinstance(node2[key], dict):
+                return key, {'type': 'internal_change',
+                             'value': make_diff(node1[key], node2[key])}
+            return key, {'type': 'changed_value',
+                         'value': [node1[key], node2[key]]}
+
+    all_keys = sorted(set.union(set(node1), set(node2)))
     deleted_keys = set(node1).difference(set(node2))
     added_keys = set(node2).difference(set(node1))
-    other_keys = set(node1).intersection(set(node2))
+    changed_keys = set(node1).intersection(set(node2))
 
-    for key in deleted_keys:
-        diff_dict.update(make_shape(key, node1[key], 'deleted'))
+    return dict(map(get_difference, all_keys))
 
-    for key in added_keys:
-        diff_dict.update(make_shape(key, node2[key], 'added'))
 
-    for key in other_keys:
-        if node1[key] == node2[key]:
-            diff_dict.update(make_shape(key, node1[key],
-                                        'unchanged'))
-        else:
-            if isinstance(node1[key], dict) and isinstance(node2[key], dict):
-                diff_dict.update(make_shape(key, make_diff(node1[key],
-                                            node2[key]), 'internal_change'))
-
-            else:
-                diff_dict.update(make_shape(key, [node1[key], node2[key]],
-                                            'changed_value'))
-
-    return dict(sorted(diff_dict.items(), key=lambda x: x[0]))
+def get_ending(pathfile):
+    return os.path.splitext(pathfile)[1]
 
 
 def generate_diff(pathfile1, pathfile2, formater='stylish'):
 
-    format_dict = {'plain': plain, 'json': json_format, 'stylish': stylish}
+    data1 = parsing_data(open(pathfile1), get_ending(pathfile1))
+    data2 = parsing_data(open(pathfile2), get_ending(pathfile2))
 
-    ending1 = os.path.splitext(pathfile1)[1]
-    ending2 = os.path.splitext(pathfile2)[1]
+    diff_dict = make_diff(data1, data2)
 
-    file_data1 = pars(open(pathfile1), ending1)
-    file_data2 = pars(open(pathfile2), ending2)
+    format_style = format_change(formater)
 
-    format_name = format_dict[formater]
-
-    diff_dict = make_diff(file_data1, file_data2)
-
-    return format_name(diff_dict)
+    return format_style(diff_dict)

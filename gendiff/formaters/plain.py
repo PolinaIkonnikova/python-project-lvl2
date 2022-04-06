@@ -21,10 +21,10 @@ def get_dict(dct):
                        dct.items()))
 
 
-def plain(diff_dict):
+def make_format(diff_dict):
     path = []
 
-    def make_plain(item, path):
+    def make_lines(item, path):
         name, attributes = item
         status = attributes['type']
         path_record = list(itertools.chain(path, [str(name)]))
@@ -32,7 +32,7 @@ def plain(diff_dict):
         if status == 'internal_change':
             children = attributes['value']
             return '\n'.join(list(map(
-                             lambda item: make_plain(item, path_record),
+                             lambda item: make_lines(item, path_record),
                              get_dict(children).items())))
 
         elif status == 'added':
@@ -44,13 +44,10 @@ def plain(diff_dict):
             return "Property '{}' was removed".format('.'.join(path_record))
 
         elif status == 'changed_value':
-            del_val = attributes['value'][0]
-            add_val = attributes['value'][1]
+            del_val, add_val = attributes['value']
             return "Property '{}' was updated. From {} to {}".format(
                 '.'.join(path_record), get_value(del_val),
                 get_value(add_val))
-        elif status == 'unchanged':
-            return ''
 
-    return '\n'.join(list(map(lambda item: make_plain(item, path),
+    return '\n'.join(list(map(lambda item: make_lines(item, path),
                               get_dict(diff_dict).items())))
