@@ -1,6 +1,5 @@
 import json
 import yaml
-import sys
 
 
 def parsing_data(data, ending):
