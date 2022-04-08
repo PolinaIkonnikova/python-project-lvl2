@@ -12,25 +12,20 @@ def test_parsing(data_file):
     assert isinstance(dict_data, dict)
 
 
-def test_parsing_empty():
-    dict_data = parsing_data(open('tests/fixtures/empty_files/empty.json'),
-                                  'tests/fixtures/empty_files/empty.json')
-    assert dict_data == {}
+@pytest.mark.parametrize('data_file', ['tests/fixtures/not_correct/bug.json',
+                                       'tests/fixtures/not_correct/empty.yaml',
+                                       'tests/fixtures/not_correct/empty.json'])
+def test_parsing_not_correct(data_file):
+    assert parsing_data(open(data_file), data_file) == False
 
 
 @pytest.mark.parametrize('data_file1, data_file2, result_file',
                          [('tests/fixtures/flat_files/flat1.json',
                            'tests/fixtures/flat_files/flat1.json',
-                           'tests/fixtures/results/nothing_to_change1.txt'),
-                          ('tests/fixtures/flat_files/flat1.json',
-                           'tests/fixtures/empty_files/empty.json',
-                           'tests/fixtures/results/nothing_to_change2.txt'),
+                           'tests/fixtures/results/nothing_to_change.txt'),
                           ('tests/fixtures/flat_files/flat1.yaml',
                            'tests/fixtures/flat_files/flat2.yaml',
-                           'tests/fixtures/results/flatfile_stylish.txt'),
-                          ('tests/fixtures/empty_files/empty.json',
-                           'tests/fixtures/empty_files/empty.json',
-                           'tests/fixtures/results/empty_res_stylish.txt')])
+                           'tests/fixtures/results/flatfile_stylish.txt')])
 def test_flat_file(data_file1, data_file2, result_file):
     result = open(result_file, 'r').read()
     assert generate_diff(data_file1, data_file2) == result
@@ -54,9 +49,6 @@ def test_gendiff_stylish(data_file1, data_file2, result_file):
                            'tests/fixtures/results/plain_treefile.txt'),
                           ('tests/fixtures/tree_files/tree1.json',
                            'tests/fixtures/tree_files/tree1.json',
-                           'tests/fixtures/results/empty_res_plain.txt'),
-                          ('tests/fixtures/empty_files/empty.json',
-                           'tests/fixtures/empty_files/empty.json',
                            'tests/fixtures/results/empty_res_plain.txt')])
 def test_gendiff_plain(data_file1, data_file2, result_file):
     result = open(result_file, 'r').read()

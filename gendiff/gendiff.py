@@ -2,6 +2,8 @@ import os.path
 from .parsing import parsing_data
 from .formaters.all_formaters import format_change
 
+ERROR_MESSAGE = "Impossible to build difference. Check your files for validity."
+
 
 def make_diff(node1, node2):
 
@@ -35,10 +37,17 @@ def get_ending(pathfile):
     return os.path.splitext(pathfile)[1]
 
 
+def get_data(pathfile):
+    with open(pathfile, 'r') as data:
+        return parsing_data(data, get_ending(pathfile))
+
+
 def generate_diff(pathfile1, pathfile2, formater='stylish'):
 
-    data1 = parsing_data(open(pathfile1), get_ending(pathfile1))
-    data2 = parsing_data(open(pathfile2), get_ending(pathfile2))
+    data1, data2 = get_data(pathfile1), get_data(pathfile2)
+
+    if (data1 or data2) is False:
+        return ERROR_MESSAGE
 
     diff_dict = make_diff(data1, data2)
 

@@ -1,12 +1,18 @@
 import json
 import yaml
+import sys
 
 
-def parsing_data(file_data, ending):
-    if ending == '.yaml' or '.yml':
-        data_dict = yaml.load(file_data, Loader=yaml.FullLoader)
-    elif ending == '.json':
-        data_dict = json.load(file_data)
-    if data_dict is None:
-        return {}
-    return data_dict
+def parsing_data(data, ending):
+    try:
+        if ending == '.yaml' or '.yml':
+            data_dict = yaml.load(data, Loader=yaml.FullLoader)
+        elif ending == '.json':
+            data_dict = json.load(data)
+
+        if data_dict is None:
+            raise TypeError
+    except (TypeError, yaml.parser.ParserError):
+        return False
+    else:
+        return data_dict
