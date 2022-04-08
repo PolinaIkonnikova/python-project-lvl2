@@ -16,7 +16,7 @@ def test_parsing(data_file):
                                        'tests/fixtures/not_correct/empty.yaml',
                                        'tests/fixtures/not_correct/empty.json'])
 def test_parsing_not_correct(data_file):
-    assert parsing_data(open(data_file), data_file) == False
+    assert parsing_data(open(data_file), data_file) is False
 
 
 @pytest.mark.parametrize('data_file1, data_file2, result_file',
