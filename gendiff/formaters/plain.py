@@ -5,12 +5,14 @@ import json
 def get_value(val):
 
     if isinstance(val, dict):
-        return '[complex value]'
-
-    if isinstance(val, bool) or val is None:
-        return json.dumps(val)
-
-    return "'{}'".format(str(val))
+        output_val = '[complex value]'
+    elif isinstance(val, bool) or val is None:
+        output_val = json.dumps(val)
+    elif isinstance(val, int) or isinstance(val, float):
+        output_val = str(val)
+    elif isinstance(val, str):
+        output_val = f"'{str(val)}'"
+    return output_val
 
 
 def get_dict(dct):
