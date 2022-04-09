@@ -17,10 +17,10 @@ Watch usage examples below and enjoy!
 ```
 make package-install
 ```
-
-Reference information
-
-[![asciicast](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k.svg)](https://asciinema.org/a/8QmXCex2iMh0tVo4umor7Eg6k?speed=2)
+#### for reference information
+```
+gendiff -h
+```
 
 Stylish format
 
