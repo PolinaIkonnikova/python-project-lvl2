@@ -1,4 +1,4 @@
-Utility GENDIFF
+## Utility GENDIFF
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/PolinaIkonnikova/python-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/PolinaIkonnikova/python-project-lvl2/actions)
@@ -13,9 +13,10 @@ You can choose three types of difference visualisation: stylish, plain, json for
 
 See the usage examples below and enjoy!
 
-Getting Started
-
-[![asciicast](https://asciinema.org/a/lPH4B5usY7opQRKEX0VxrtCLk.svg)](https://asciinema.org/a/lPH4B5usY7opQRKEX0VxrtCLk?speed=3)
+#### for install: 
+```
+make package-install
+```
 
 Reference information
 
