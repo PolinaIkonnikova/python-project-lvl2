@@ -7,14 +7,15 @@ Utility GENDIFF
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b1adf05fa6f55999f3a3/test_coverage)](https://codeclimate.com/github/PolinaIkonnikova/python-project-lvl2/test_coverage)
 
 Do you want to see difference between two json or yaml(yml) files?
-Just pull this repo to your local space.
+Just clone this repo to your local space.
 
 You can choose three types of difference visualisation: stylish, plain, json formats.
 
 See the usage examples below and enjoy!
 
-Getting Started: make install -> make build -> make package-install
+Getting Started
 
+[![asciicast](https://asciinema.org/a/lPH4B5usY7opQRKEX0VxrtCLk.svg)](https://asciinema.org/a/lPH4B5usY7opQRKEX0VxrtCLk?speed=3)
 
 Reference information
 
