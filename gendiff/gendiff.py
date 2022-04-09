@@ -10,20 +10,22 @@ def make_diff(node1, node2):
     def get_difference(key):
 
         if key in deleted_keys:
-            return key, {'type': 'deleted', 'value': node1[key]}
+            val =  {'type': 'deleted', 'value': node1[key]}
 
         elif key in added_keys:
-            return key, {'type': 'added', 'value': node2[key]}
+            val=  {'type': 'added', 'value': node2[key]}
 
         elif key in changed_keys and node1[key] == node2[key]:
-            return key, {'type': 'unchanged', 'value': node1[key]}
+            val =  {'type': 'unchanged', 'value': node1[key]}
 
         elif key in changed_keys and node1[key] != node2[key]:
             if isinstance(node1[key], dict) and isinstance(node2[key], dict):
-                return key, {'type': 'internal_change',
+                val = {'type': 'internal_change',
                              'value': make_diff(node1[key], node2[key])}
-            return key, {'type': 'changed_value',
-                         'value': [node1[key], node2[key]]}
+            else: 
+                val =  {'type': 'changed_value',
+                        'value': [node1[key], node2[key]]}
+        return key, val
 
     all_keys = sorted(set.union(set(node1), set(node2)))
     deleted_keys = set(node1).difference(set(node2))
