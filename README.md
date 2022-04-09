@@ -11,7 +11,7 @@ Just clone this repo to your local space.
 
 You can choose three types of difference visualisation: stylish, plain, json formats.
 
-See the usage examples below and enjoy!
+Watch usage examples below and enjoy!
 
 #### for install: 
 ```
