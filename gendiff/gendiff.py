@@ -46,7 +46,7 @@ def generate_diff(pathfile1, pathfile2, formater='stylish'):
 
     data1, data2 = get_data(pathfile1), get_data(pathfile2)
 
-    if (data1 or data2) is False:
+    if (data1 is False) or (data2 is False):
         return ERROR_MESSAGE
 
     diff_dict = make_diff(data1, data2)

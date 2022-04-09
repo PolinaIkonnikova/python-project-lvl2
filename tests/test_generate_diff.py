@@ -25,7 +25,13 @@ def test_parsing_not_correct(data_file):
                            'tests/fixtures/results/nothing_to_change.txt'),
                           ('tests/fixtures/flat_files/flat1.yaml',
                            'tests/fixtures/flat_files/flat2.yaml',
-                           'tests/fixtures/results/flatfile_stylish.txt')])
+                           'tests/fixtures/results/flatfile_stylish.txt'),
+                          ('tests/fixtures/not_correct/bug.json',
+                           'tests/fixtures/flat_files/flat1.json',
+                           'tests/fixtures/results/error_message.txt'),
+                          ('tests/fixtures/not_correct/empty.yaml',
+                           'tests/fixtures/tree_files/tree1.yaml',
+                           'tests/fixtures/results/error_message.txt')])
 def test_flat_file(data_file1, data_file2, result_file):
     result = open(result_file, 'r').read()
     assert generate_diff(data_file1, data_file2) == result
